@@ -1,5 +1,5 @@
 {
-    "name": "hussain/db-digram",
+    "name": "hisee/db-digram",
     "description": "Laravel package to visualize and manage database schema with an interactive DB diagram UI.",
     "type": "library",
     "license": "MIT",
