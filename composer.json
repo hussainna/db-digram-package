@@ -1,0 +1,28 @@
+{
+    "name": "hussain/db-digram",
+    "description": "Laravel package to visualize and manage database schema with an interactive DB diagram UI.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "database",
+        "diagram",
+        "schema"
+    ],
+    "require": {
+        "php": "^8.2",
+        "laravel/framework": "^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hussain\\DBDigram\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Hussain\\DBDigram\\DbDigramServiceProvider"
+            ]
+        }
+    }
+}
