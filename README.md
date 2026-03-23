@@ -1,0 +1,58 @@
+![DB Digram UI](./public/image.png)
+
+# DB Digram
+
+Interactive database diagram builder for Laravel.
+
+This package provides a visual UI to inspect your schema, create/update/delete tables and columns, and export SQL.
+
+## Requirements
+
+- PHP 8.2+
+- Laravel 11 or 12
+
+## Installation
+
+### Use this command to install it
+
+```bash
+composer require hisee/db-digram
+```
+
+## Service Provider
+
+Laravel package auto-discovery is enabled, so no manual provider registration is required.
+
+If your app has auto-discovery disabled, register the provider manually in bootstrap/providers.php:
+
+```php
+Hussain\DBDigram\DbDigramServiceProvider::class,
+```
+
+## Usage
+
+Start your app and open:
+
+- /diagram
+
+Main capabilities in the UI:
+
+- View current database schema
+- Add table
+- Edit table name and table columns
+- Delete table
+- Add/edit/delete columns
+- Define foreign key relationships
+- Zoom controls and auto zoom
+- Export schema SQL
+- Toggle dark and light mode
+
+
+
+## Important Notes
+
+- Schema actions create migration files in your host app under database/migrations.
+- Table and column changes are applied by running migrations internally.
+- Use carefully in production environments.
+- Keep backups before destructive schema changes.
+
