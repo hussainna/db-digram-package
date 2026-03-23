@@ -29,6 +29,22 @@ If your app has auto-discovery disabled, register the provider manually in boots
 Hussain\DBDigram\DbDigramServiceProvider::class,
 ```
 
+## Publish Config
+
+After installation, publish the package config file:
+
+```bash
+php artisan vendor:publish --tag=db-digram-config
+```
+
+This creates `config/db-digram.php` in your app where you can enable/disable the package:
+
+```php
+return [
+	'enabled' => true,
+];
+```
+
 ## Usage
 
 Start your app and open:
