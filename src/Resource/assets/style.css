@@ -1,15 +1,53 @@
 :root {
 	--bg: #f5f7fb;
+	--bg-accent-a: #dff1ff;
+	--bg-accent-b: #eef2f8;
 	--panel: #ffffff;
+	--panel-soft: #f9fbff;
 	--ink: #172236;
 	--muted: #5f6b7d;
 	--line: #d8dfeb;
+	--line-strong: #b9c5da;
 	--primary: #1c7ed6;
 	--primary-strong: #0f5ca8;
 	--danger: #b42318;
+	--btn-bg: #ffffff;
+	--canvas-grid-a: #f8faff;
+	--canvas-grid-b: #f1f5fb;
+	--header-gradient-a: #eff7ff;
+	--header-gradient-b: #f4f7ff;
+	--table-shadow: rgba(23, 34, 54, 0.08);
+	--dialog-backdrop: rgba(17, 24, 39, 0.45);
+	--relation-line: #7e22ce;
 	--pk: #0f766e;
 	--fk: #9333ea;
 	--uk: #b45309;
+}
+
+:root[data-theme="dark"] {
+	--bg: #0f1724;
+	--bg-accent-a: #1b2a3f;
+	--bg-accent-b: #0b1421;
+	--panel: #121c2d;
+	--panel-soft: #182438;
+	--ink: #e6edf7;
+	--muted: #9fb0c7;
+	--line: #2a3b57;
+	--line-strong: #415474;
+	--primary: #3b9cff;
+	--primary-strong: #2f87de;
+	--danger: #f87171;
+	--btn-bg: #152235;
+	--canvas-grid-a: #152237;
+	--canvas-grid-b: #101b2b;
+	--header-gradient-a: #1a2a42;
+	--header-gradient-b: #142238;
+	--table-shadow: rgba(0, 0, 0, 0.38);
+	--dialog-backdrop: rgba(3, 7, 15, 0.65);
+	--relation-line: #c084fc;
+	--pk: #2dd4bf;
+	--fk: #c084fc;
+	--uk: #fbbf24;
 }
 
 * {
@@ -22,7 +60,7 @@ body {
 	height: 100%;
 	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 	color: var(--ink);
-	background: radial-gradient(circle at 20% 10%, #dff1ff 0, #f5f7fb 35%, #eef2f8 100%);
+	background: radial-gradient(circle at 20% 10%, var(--bg-accent-a) 0, var(--bg) 35%, var(--bg-accent-b) 100%);
 }
 
 body {
@@ -52,7 +90,7 @@ body {
 
 .btn {
 	border: 1px solid var(--line);
-	background: #fff;
+	background: var(--btn-bg);
 	color: var(--ink);
 	padding: 8px 12px;
 	border-radius: 8px;
@@ -61,7 +99,7 @@ body {
 }
 
 .btn:hover {
-	border-color: #b9c5da;
+	border-color: var(--line-strong);
 }
 
 .btn-primary {
@@ -152,7 +190,7 @@ body {
 	border: 1px solid var(--line);
 	border-radius: 8px;
 	padding: 8px;
-	background: #fff;
+	background: var(--btn-bg);
 	font-size: 14px;
 }
 
@@ -169,9 +207,9 @@ body {
 	overflow: auto;
 	background: repeating-linear-gradient(
 		0deg,
-		#f8faff,
-		#f8faff 26px,
-		#f1f5fb 27px
+		var(--canvas-grid-a),
+		var(--canvas-grid-a) 26px,
+		var(--canvas-grid-b) 27px
 	);
 }
 
@@ -200,8 +238,8 @@ body {
 	width: 280px;
 	border: 1px solid var(--line);
 	border-radius: 10px;
-	background: #fff;
-	box-shadow: 0 8px 24px rgba(23, 34, 54, 0.08);
+	background: var(--panel);
+	box-shadow: 0 8px 24px var(--table-shadow);
 }
 
 .table-header {
@@ -211,7 +249,7 @@ body {
 	gap: 6px;
 	padding: 9px 10px;
 	border-bottom: 1px solid var(--line);
-	background: linear-gradient(90deg, #eff7ff, #f4f7ff);
+	background: linear-gradient(90deg, var(--header-gradient-a), var(--header-gradient-b));
 	cursor: move;
 }
 
@@ -228,7 +266,7 @@ body {
 
 .icon-btn {
 	border: 1px solid var(--line);
-	background: #fff;
+	background: var(--btn-bg);
 	border-radius: 6px;
 	padding: 2px 7px;
 	font-size: 12px;
@@ -253,7 +291,7 @@ body {
 	border: 1px solid var(--line);
 	border-radius: 8px;
 	padding: 6px;
-	background: #fafcff;
+	background: var(--panel-soft);
 }
 
 .column-top {
@@ -335,7 +373,7 @@ body {
 }
 
 .dialog::backdrop {
-	background: rgba(17, 24, 39, 0.45);
+	background: var(--dialog-backdrop);
 }
 
 .form {
@@ -382,6 +420,8 @@ body {
 	border-radius: 8px;
 	padding: 8px;
 	font-size: 14px;
+	color: var(--ink);
+	background: var(--btn-bg);
 }
 
 .checkbox-row {
@@ -408,7 +448,7 @@ body {
 	border: 1px solid var(--line);
 	border-radius: 10px;
 	padding: 10px;
-	background: #f9fbff;
+	background: var(--panel-soft);
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -438,17 +478,17 @@ body {
 	border: 1px solid var(--line);
 	border-radius: 8px;
 	padding: 10px;
-	background: linear-gradient(180deg, #ffffff, #f9fbff);
+	background: linear-gradient(180deg, var(--btn-bg), var(--panel-soft));
 	display: grid;
 	gap: 8px;
-	box-shadow: 0 4px 14px rgba(23, 34, 54, 0.06);
+	box-shadow: 0 4px 14px var(--table-shadow);
 }
 
 .table-col-section {
-	border: 1px solid #e3eaf6;
+	border: 1px solid var(--line);
 	border-radius: 8px;
 	padding: 8px;
-	background: #fff;
+	background: var(--btn-bg);
 	display: grid;
 	gap: 8px;
 }
@@ -458,7 +498,7 @@ body {
 	font-weight: 700;
 	letter-spacing: 0.35px;
 	text-transform: uppercase;
-	color: #546179;
+	color: var(--muted);
 }
 
 .table-col-grid {
@@ -483,13 +523,13 @@ body {
 }
 
 .table-col-relation {
-	border: 1px dashed #d3deef;
+	border: 1px dashed var(--line);
 	border-radius: 8px;
 	padding: 8px;
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 8px;
-	background: #f8fbff;
+	background: var(--panel-soft);
 }
 
 .table-col-relation label {
@@ -502,7 +542,7 @@ body {
 	padding: 8px;
 	border: 1px dashed var(--line);
 	border-radius: 8px;
-	background: #fff;
+	background: var(--btn-bg);
 }
 
 @media (max-width: 700px) {

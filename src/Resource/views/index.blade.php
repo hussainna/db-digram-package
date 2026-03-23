@@ -11,6 +11,7 @@
 	<header class="topbar">
 		<div class="brand">DB Diagram Builder</div>
 		<div class="toolbar">
+			<button id="themeToggleBtn" class="btn" type="button" aria-label="Toggle color theme">Dark Mode</button>
 			<button id="addTableBtn" class="btn btn-primary">Add Table</button>
 			<button id="zoomOutBtn" class="btn">-</button>
 			<button id="zoomInBtn" class="btn">+</button>

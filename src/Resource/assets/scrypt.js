@@ -1,4 +1,5 @@
 const STORAGE_KEY = "db-diagram-state-v1";
+const THEME_STORAGE_KEY = "db-digram-theme-v1";
 const SCHEMA_ENDPOINT = "/diagram/schema";
 const TABLE_CREATE_ENDPOINT = "/diagram/tables";
 const TABLE_UPDATE_ENDPOINT = "/diagram/tables";
@@ -10,6 +11,7 @@ const state = {
 };
 
 const ui = {
+    themeToggleBtn: document.getElementById("themeToggleBtn"),
     addTableBtn: document.getElementById("addTableBtn"),
     zoomOutBtn: document.getElementById("zoomOutBtn"),
     zoomInBtn: document.getElementById("zoomInBtn"),
@@ -59,6 +61,34 @@ let isTableSavePending = false;
 
 const ZOOM_MIN = 0.45;
 const ZOOM_MAX = 1.35;
+
+function getPreferredTheme() {
+    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    if (savedTheme === "dark" || savedTheme === "light") {
+        return savedTheme;
+    }
+
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function updateThemeToggleLabel(theme) {
+    if (!ui.themeToggleBtn) return;
+
+    ui.themeToggleBtn.textContent = theme === "dark" ? "Light Mode" : "Dark Mode";
+    ui.themeToggleBtn.setAttribute("aria-label", `Switch to ${theme === "dark" ? "light" : "dark"} mode`);
+}
+
+function applyTheme(theme) {
+    const resolvedTheme = theme === "dark" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", resolvedTheme);
+    localStorage.setItem(THEME_STORAGE_KEY, resolvedTheme);
+    updateThemeToggleLabel(resolvedTheme);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+    applyTheme(current === "dark" ? "light" : "dark");
+}
 
 function id(prefix) {
     return `${prefix}_${Math.random().toString(36).slice(2, 9)}`;
@@ -1396,7 +1426,7 @@ function drawRelations() {
             const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
             path.setAttribute("d", `M ${x1} ${y1} C ${x1 + curve} ${y1}, ${x2 - curve} ${y2}, ${x2} ${y2}`);
             path.setAttribute("fill", "none");
-            path.setAttribute("stroke", "#7e22ce");
+            path.setAttribute("stroke", "var(--relation-line)");
             path.setAttribute("stroke-width", "2");
             path.setAttribute("stroke-dasharray", "5 4");
 
@@ -1528,5 +1558,8 @@ window.addEventListener("resize", () => {
     drawRelations();
 });
 ui.canvasWrap.addEventListener("scroll", drawRelations);
+
+applyTheme(getPreferredTheme());
+ui.themeToggleBtn?.addEventListener("click", toggleTheme);
 
 initializeDiagram();
