@@ -4,10 +4,31 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
+	<meta name="db-digram-auth-config" content='@json($authConfig ?? ["enabled" => false, "email" => "", "password" => ""])'>
 	<title>DB Diagram UI</title>
 	<link rel="stylesheet" href="{{ route('db-digram.assets.css') }}">
 </head>
-<body>
+<body data-db-digram-auth-enabled="{{ !empty($authConfig['enabled']) ? '1' : '0' }}">
+	<div id="authOverlay" class="auth-overlay" hidden>
+		<div class="auth-card" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+			<h2 id="authTitle">Authentication Required</h2>
+			<p class="auth-text">Please enter your email and password to access DB Diagram.</p>
+			<form id="authForm" class="auth-form" autocomplete="off">
+				<label>
+					Email
+					<input id="authEmailInput" type="email" required maxlength="120" placeholder="admin@example.com">
+				</label>
+				<label>
+					Password
+					<input id="authPasswordInput" type="password" required maxlength="120" placeholder="Password">
+				</label>
+				<p id="authError" class="auth-error" hidden>Invalid email or password.</p>
+				<button type="submit" class="btn btn-primary">Login</button>
+			</form>
+		</div>
+	</div>
+
+	<div id="diagramApp">
 	<header class="topbar">
 		<div class="brand">DB Diagram Builder</div>
 		<div class="toolbar">
@@ -108,6 +129,7 @@
 			</menu>
 		</form>
 	</dialog>
+	</div>
 
 	<script src="{{ route('db-digram.assets.js') }}"></script>
 </body>

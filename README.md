@@ -42,8 +42,27 @@ This creates `config/db-digram.php` in your app where you can enable/disable the
 ```php
 return [
 	'enabled' => true,
+	'auth' => [
+		'enabled' => false,
+		'email' => '',
+		'password' => '',
+		'realm' => 'DB Diagram Access',
+	],
 ];
 ```
+
+You can also configure these values in `.env`:
+
+```env
+DB_DIGRAM_AUTH_ENABLED=true
+DB_DIGRAM_AUTH_EMAIL=admin@example.com
+DB_DIGRAM_AUTH_PASSWORD=secret-password
+DB_DIGRAM_AUTH_REALM="DB Diagram Login"
+```
+
+When auth is enabled, the page shows a login modal before the diagram is displayed.
+
+![Authentication Modal](./public/authentication.png)
 
 ## Usage
 

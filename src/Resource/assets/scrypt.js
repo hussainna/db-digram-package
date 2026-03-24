@@ -1,16 +1,45 @@
 const STORAGE_KEY = "db-diagram-state-v1";
 const THEME_STORAGE_KEY = "db-digram-theme-v1";
+const AUTH_STORAGE_KEY = "db-digram-auth-v1";
 const SCHEMA_ENDPOINT = "/diagram/schema";
 const TABLE_CREATE_ENDPOINT = "/diagram/tables";
 const TABLE_UPDATE_ENDPOINT = "/diagram/tables";
 const EXPORT_DB_SQL_ENDPOINT = "/diagram/export/sql";
 const TABLE_COLUMN_TYPES = ["string", "text", "integer", "bigInteger", "boolean", "date", "dateTime", "decimal"];
 
+function parseAuthConfig() {
+    const tag = document.querySelector('meta[name="db-digram-auth-config"]');
+    const raw = tag?.getAttribute("content") || "";
+
+    if (!raw) {
+        return { enabled: false, email: "", password: "" };
+    }
+
+    try {
+        const parsed = JSON.parse(raw);
+        return {
+            enabled: Boolean(parsed?.enabled),
+            email: String(parsed?.email || ""),
+            password: String(parsed?.password || "")
+        };
+    } catch (error) {
+        return { enabled: false, email: "", password: "" };
+    }
+}
+
+const AUTH_CONFIG = parseAuthConfig();
+
 const state = {
     tables: []
 };
 
 const ui = {
+    authOverlay: document.getElementById("authOverlay"),
+    authForm: document.getElementById("authForm"),
+    authEmailInput: document.getElementById("authEmailInput"),
+    authPasswordInput: document.getElementById("authPasswordInput"),
+    authError: document.getElementById("authError"),
+
     themeToggleBtn: document.getElementById("themeToggleBtn"),
     addTableBtn: document.getElementById("addTableBtn"),
     zoomOutBtn: document.getElementById("zoomOutBtn"),
@@ -61,6 +90,122 @@ let isTableSavePending = false;
 
 const ZOOM_MIN = 0.45;
 const ZOOM_MAX = 1.35;
+
+function isAuthEnabled() {
+    return Boolean(AUTH_CONFIG.enabled);
+}
+
+function showDiagramApp() {
+    document.body.classList.add("db-digram-auth-ready");
+}
+
+function hideDiagramApp() {
+    document.body.classList.remove("db-digram-auth-ready");
+}
+
+function setAuthOverlayVisible(isVisible) {
+    if (!ui.authOverlay) return;
+    ui.authOverlay.hidden = !isVisible;
+}
+
+function readSavedAuth() {
+    const raw = localStorage.getItem(AUTH_STORAGE_KEY);
+    if (!raw) return null;
+
+    try {
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === "object" ? parsed : null;
+    } catch (error) {
+        return null;
+    }
+}
+
+function saveAuth(email) {
+    localStorage.setItem(
+        AUTH_STORAGE_KEY,
+        JSON.stringify({
+            email,
+            authenticatedAt: new Date().toISOString()
+        })
+    );
+}
+
+function clearAuth() {
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+}
+
+function canAutoAuthenticate() {
+    if (!isAuthEnabled()) return true;
+
+    const expectedEmail = String(AUTH_CONFIG.email || "");
+    const expectedPassword = String(AUTH_CONFIG.password || "");
+    if (!expectedEmail || !expectedPassword) {
+        return false;
+    }
+
+    const saved = readSavedAuth();
+    if (!saved) return false;
+
+    return String(saved.email || "") === expectedEmail;
+}
+
+function handleAuthSubmit(event) {
+    event.preventDefault();
+
+    const expectedEmail = String(AUTH_CONFIG.email || "");
+    const expectedPassword = String(AUTH_CONFIG.password || "");
+    const enteredEmail = String(ui.authEmailInput?.value || "").trim();
+    const enteredPassword = String(ui.authPasswordInput?.value || "");
+
+    if (enteredEmail === expectedEmail && enteredPassword === expectedPassword) {
+        saveAuth(enteredEmail);
+        if (ui.authError) {
+            ui.authError.hidden = true;
+        }
+        setAuthOverlayVisible(false);
+        showDiagramApp();
+        initializeDiagram();
+        return;
+    }
+
+    clearAuth();
+    if (ui.authError) {
+        ui.authError.hidden = false;
+    }
+    if (ui.authPasswordInput) {
+        ui.authPasswordInput.value = "";
+        ui.authPasswordInput.focus();
+    }
+}
+
+function startApp() {
+    applyTheme(getPreferredTheme());
+
+    if (!isAuthEnabled()) {
+        showDiagramApp();
+        initializeDiagram();
+        return;
+    }
+
+    if (canAutoAuthenticate()) {
+        setAuthOverlayVisible(false);
+        showDiagramApp();
+        initializeDiagram();
+        return;
+    }
+
+    hideDiagramApp();
+    setAuthOverlayVisible(true);
+    if (ui.authForm) {
+        ui.authForm.addEventListener("submit", handleAuthSubmit);
+    }
+    if (ui.authError) {
+        ui.authError.hidden = true;
+    }
+    if (ui.authEmailInput) {
+        ui.authEmailInput.focus();
+    }
+}
 
 function getPreferredTheme() {
     const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
@@ -1559,7 +1704,6 @@ window.addEventListener("resize", () => {
 });
 ui.canvasWrap.addEventListener("scroll", drawRelations);
 
-applyTheme(getPreferredTheme());
 ui.themeToggleBtn?.addEventListener("click", toggleTheme);
 
-initializeDiagram();
+startApp();

@@ -5,7 +5,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('web')->group(function (): void {
     Route::get('/diagram', function () {
-        return view('db-digram::index');
+        $authConfig = config('db-digram.auth', []);
+
+        return view('db-digram::index', [
+            'authConfig' => [
+                'enabled' => (bool) ($authConfig['enabled'] ?? false),
+                'email' => (string) ($authConfig['email'] ?? ''),
+                'password' => (string) ($authConfig['password'] ?? ''),
+            ],
+        ]);
     })->name('db-digram.index');
 
     Route::get('/diagram/assets/style.css', function () {

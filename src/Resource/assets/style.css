@@ -68,6 +68,79 @@ body {
 	flex-direction: column;
 }
 
+body[data-db-digram-auth-enabled="1"] #diagramApp {
+	display: none;
+}
+
+body.db-digram-auth-ready #diagramApp {
+	display: flex;
+	flex-direction: column;
+	min-height: 100%;
+}
+
+.auth-overlay {
+	position: fixed;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 16px;
+	background: var(--dialog-backdrop);
+	z-index: 1000;
+}
+
+.auth-overlay[hidden] {
+	display: none !important;
+}
+
+.auth-card {
+	width: min(420px, 94vw);
+	background: var(--panel);
+	border: 1px solid var(--line);
+	border-radius: 14px;
+	padding: 18px;
+	box-shadow: 0 16px 40px var(--table-shadow);
+}
+
+.auth-card h2 {
+	margin: 0 0 8px;
+	font-size: 20px;
+}
+
+.auth-text {
+	margin: 0 0 14px;
+	font-size: 14px;
+	color: var(--muted);
+}
+
+.auth-form {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.auth-form label {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	font-size: 14px;
+}
+
+.auth-form input {
+	border: 1px solid var(--line);
+	border-radius: 8px;
+	padding: 8px 10px;
+	font-size: 14px;
+	background: var(--btn-bg);
+	color: var(--ink);
+}
+
+.auth-error {
+	margin: 0;
+	color: var(--danger);
+	font-size: 13px;
+}
+
 .topbar {
 	display: flex;
 	justify-content: space-between;
